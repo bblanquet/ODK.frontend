@@ -6,7 +6,10 @@ export abstract class Hook<T> {
 	protected Update(setter: (state: T) => void): void {
 		setter(this.State);
 		this.SetState({ ...this.State });
+		this.StateChanged();
 	}
+
+	protected abstract StateChanged(): void;
 
 	public abstract Unmount(): void;
 }

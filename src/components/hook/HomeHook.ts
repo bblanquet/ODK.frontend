@@ -5,13 +5,16 @@ import { Howl } from 'howler';
 import { Spot } from '../model/Spot';
 import { Gamestatus } from '../model/Gamestatus';
 
+const DURATION = 30;
+
 export class HomeHook extends Hook<Game> {
 	private _howl: Howl;
 	private _key: string = 'mole_odk';
 	private _clockTimer: NodeJS.Timeout;
 	private _molesTimer: NodeJS.Timeout;
 
-	didMount() {
+	constructor(d: [Game, StateUpdater<Game>]) {
+		super(d[0], d[1]);
 		const storage = window.localStorage.getItem(this._key);
 		if (storage) {
 			const newState = JSON.parse(storage as string) as Game;
@@ -21,13 +24,13 @@ export class HomeHook extends Hook<Game> {
 				e.spots = newState.spots;
 				e.status = newState.status;
 			});
+			this.CheckTimers();
 		} else {
 			this.init();
 		}
 	}
 
-	didUpdate() {
-		window.localStorage.setItem(this._key, JSON.stringify(this.State));
+	private CheckTimers() {
 		if (this.State.status === Gamestatus.inprogress) {
 			if (!this._clockTimer) {
 				this.clock();
@@ -49,6 +52,10 @@ export class HomeHook extends Hook<Game> {
 		this.clearTimer();
 	}
 
+	protected StateChanged(): void {
+		window.localStorage.setItem(this._key, JSON.stringify(this.State));
+	}
+
 	private clearTimer() {
 		clearTimeout(this._molesTimer);
 		clearTimeout(this._clockTimer);
@@ -66,7 +73,11 @@ export class HomeHook extends Hook<Game> {
 		return holes;
 	}
 
-	public getColor() {
+	public getMedalColor() {
+		return this.State.status === Gamestatus.done ? 'bg-success' : 'bg-secondary';
+	}
+
+	public getClockColor() {
 		if (this.State.status !== Gamestatus.inprogress) {
 			return 'bg-secondary';
 		} else {
@@ -82,6 +93,7 @@ export class HomeHook extends Hook<Game> {
 		this.Update((e) => {
 			e.status = Gamestatus.inprogress;
 		});
+		this.CheckTimers();
 	}
 
 	public Hit(spot: Spot): void {
@@ -104,7 +116,7 @@ export class HomeHook extends Hook<Game> {
 				s.hasMole = false;
 			});
 			this.Update((e) => {
-				e.time = 15;
+				e.time = DURATION;
 				e.status = Gamestatus.done;
 				e.spots = this.State.spots;
 			});
@@ -150,15 +162,11 @@ export class HomeHook extends Hook<Game> {
 		];
 	}
 
-	constructor(d: [Game, StateUpdater<Game>]) {
-		super(d[0], d[1]);
-	}
-
 	static DefaultState(): Game {
 		const g = new Game();
 		g.spots = this.spots();
 		g.points = 0;
-		g.time = 15;
+		g.time = DURATION;
 		g.status = Gamestatus.pending;
 		return g;
 	}

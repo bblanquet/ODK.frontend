@@ -10,19 +10,11 @@ import { Gamestatus } from '../model/Gamestatus';
 import Visible from '../common/Visible';
 import { HookedComponent } from '../Hook/HookedComponent';
 import { HomeHook } from '../Hook/HomeHook';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 
 export default class Home extends HookedComponent<{}, HomeHook, Game> {
 	GetDefaultHook() {
 		return new HomeHook(useState(HomeHook.DefaultState()));
-	}
-
-	componentDidMount() {
-		this.Hook.didMount();
-	}
-
-	componentDidUpdate() {
-		this.Hook.didUpdate();
 	}
 
 	Rendering() {
@@ -31,10 +23,10 @@ export default class Home extends HookedComponent<{}, HomeHook, Game> {
 				header={
 					<div style="background-color:#ededed; padding:10px 10px 10px 10px">
 						<Line>
-							<span class="badge badge-pill bg-secondary sm-m-l sm-m-r">
+							<span class={`badge badge-pill ${this.Hook.getMedalColor()} sm-m-l sm-m-r`}>
 								<Icon value={'fas fa-medal'} /> 점수 {this.Hook.State.points}
 							</span>
-							<span class={`badge badge-pill ${this.Hook.getColor()} sm-m-l sm-m-r`}>
+							<span class={`badge badge-pill ${this.Hook.getClockColor()} sm-m-l sm-m-r`}>
 								<Icon value={'fas fa-stopwatch'} /> 시간: {this.Hook.State.time}
 							</span>
 						</Line>
