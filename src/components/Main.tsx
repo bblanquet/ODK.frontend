@@ -86,7 +86,7 @@ export default class Main extends Component<{}, Game> {
 				s.hasMole = false;
 			});
 			this.setState({
-				time: 60,
+				time: 15,
 				status: Gamestatus.done,
 				spots: this.state.spots
 			});
