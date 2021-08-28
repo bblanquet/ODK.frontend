@@ -1,15 +1,15 @@
 import { StateUpdater } from 'preact/hooks';
 
 export abstract class Hook<T> {
-	public constructor(public State: T, protected SetState: StateUpdater<T>) {}
+	public constructor(public state: T, protected setState: StateUpdater<T>) {}
 
-	protected Update(setter: (state: T) => void): void {
-		setter(this.State);
-		this.SetState({ ...this.State });
-		this.StateChanged();
+	protected update(setter: (state: T) => void): void {
+		setter(this.state);
+		this.setState({ ...this.state });
+		this.stateChanged();
 	}
 
-	protected abstract StateChanged(): void;
+	protected abstract stateChanged(): void;
 
-	public abstract Unmount(): void;
+	public abstract unmount(): void;
 }

@@ -10,35 +10,35 @@ import { Gamestatus } from '../model/Gamestatus';
 import Visible from '../common/Visible';
 import { HookedComponent } from '../Hook/HookedComponent';
 import { HomeHook } from '../Hook/HomeHook';
-import { useState, useEffect } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 export default class Home extends HookedComponent<{}, HomeHook, Game> {
-	GetDefaultHook() {
-		return new HomeHook(useState(HomeHook.DefaultState()));
+	getDefaultHook() {
+		return new HomeHook(useState(HomeHook.defaultState()));
 	}
 
-	Rendering() {
+	rendering() {
 		return (
 			<Body
 				header={
 					<div style="background-color:#ededed; padding:10px 10px 10px 10px">
 						<Line>
-							<span class={`badge badge-pill ${this.Hook.getMedalColor()} sm-m-l sm-m-r`}>
-								<Icon value={'fas fa-medal'} /> 점수 {this.Hook.State.points}
+							<span class={`badge badge-pill ${this.hook.getMedalColor()} sm-m-l sm-m-r`}>
+								<Icon value={'fas fa-medal'} /> 점수 {this.hook.state.points}
 							</span>
-							<span class={`badge badge-pill ${this.Hook.getClockColor()} sm-m-l sm-m-r`}>
-								<Icon value={'fas fa-stopwatch'} /> 시간: {this.Hook.State.time}
+							<span class={`badge badge-pill ${this.hook.getClockColor()} sm-m-l sm-m-r`}>
+								<Icon value={'fas fa-stopwatch'} /> 시간: {this.hook.state.time}
 							</span>
 						</Line>
 					</div>
 				}
 				content={
 					<Column>
-						{this.Hook.State.spots != undefined ? (
-							this.Hook.classified().map((line) => (
+						{this.hook.state.spots != undefined ? (
+							this.hook.classified().map((line) => (
 								<Line>
 									{line.map((spot) => (
-										<CircularBtn hasAnimation={spot.hasMole} onClick={() => this.Hook.Hit(spot)}>
+										<CircularBtn hasAnimation={spot.hasMole} onClick={() => this.hook.hit(spot)}>
 											<div class={`fill-parent ${spot.hasMole ? 'icon-mole' : 'icon-hole'}`} />
 										</CircularBtn>
 									))}
@@ -52,19 +52,19 @@ export default class Home extends HookedComponent<{}, HomeHook, Game> {
 				footer={
 					<div style="background-color:#ededed; padding:10px 10px 10px 10px">
 						<Line>
-							<Visible isVisible={this.Hook.State.status === Gamestatus.pending}>
+							<Visible isVisible={this.hook.state.status === Gamestatus.pending}>
 								<Btn
 									onClick={() => {
-										this.Hook.Start();
+										this.hook.start();
 									}}
 								>
 									<Icon value="far fa-arrow-alt-circle-right" /> 시작
 								</Btn>
 							</Visible>
-							<Visible isVisible={this.Hook.State.status !== Gamestatus.pending}>
+							<Visible isVisible={this.hook.state.status !== Gamestatus.pending}>
 								<Btn
 									onClick={() => {
-										this.Hook.init();
+										this.hook.init();
 									}}
 								>
 									<Icon value="fas fa-power-off" /> 초기화
