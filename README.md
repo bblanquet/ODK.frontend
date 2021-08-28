@@ -1,3 +1,5 @@
+![plot](https://github.com/bibimchi/ODK/blob/master/src/asset/favicon.png)
+
 ## ODK - mole catching game
 24 holes in the play area are filled with small moles, which pop up at random. Points are scored by whacking each mole as it appears.
 
